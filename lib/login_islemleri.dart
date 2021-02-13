@@ -86,7 +86,7 @@ class _LoginIslemleriState extends State<LoginIslemleri> {
 
       // Obtain the auth details from the request
       final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+      await googleUser.authentication;
 
       // Create a new credential
       final GoogleAuthCredential credential = GoogleAuthProvider.credential(
@@ -133,7 +133,7 @@ class _LoginIslemleriState extends State<LoginIslemleri> {
     try {
       if (_auth.currentUser == null) {
         User _oturumAcanUser = (await _auth.signInWithEmailAndPassword(
-                email: _email, password: _password))
+            email: _email, password: _password))
             .user;
 
         if (_oturumAcanUser.emailVerified) {
@@ -149,8 +149,8 @@ class _LoginIslemleriState extends State<LoginIslemleri> {
       print(e.toString());
     }
   }
-  
-    void _cikisYap() async {
+
+  void _cikisYap() async {
     if (_auth.currentUser == null) {
       await _auth.signOut();
     } else {
@@ -179,7 +179,7 @@ class _LoginIslemleriState extends State<LoginIslemleri> {
         String password = 'newPassword!';
 
         EmailAuthCredential credential =
-            EmailAuthProvider.credential(email: email, password: password);
+        EmailAuthProvider.credential(email: email, password: password);
 
         await FirebaseAuth.instance.currentUser
             .reauthenticateWithCredential(credential);
@@ -195,10 +195,10 @@ class _LoginIslemleriState extends State<LoginIslemleri> {
       print("************** Şifre güncellenirken hata çıktı " + e.toString());
     }
   }
-  
-  
-  
-    void _updateEmail() async {
+
+
+
+  void _updateEmail() async {
     try {
       await _auth.currentUser.updateEmail("iltasferhatt@gmail.com");
       print("************** Email güncellendi  : ");
@@ -208,7 +208,7 @@ class _LoginIslemleriState extends State<LoginIslemleri> {
         String password = 'newPassword!';
 
         EmailAuthCredential credential =
-            EmailAuthProvider.credential(email: email, password: password);
+        EmailAuthProvider.credential(email: email, password: password);
 
         await FirebaseAuth.instance.currentUser
             .reauthenticateWithCredential(credential);
@@ -273,8 +273,8 @@ class _LoginIslemleriState extends State<LoginIslemleri> {
       print("**************** TEL HATASI GİRİŞ :  "+e.toString());
     }
   }
-  
-  
-  
-  
+
+
+
+
 }
