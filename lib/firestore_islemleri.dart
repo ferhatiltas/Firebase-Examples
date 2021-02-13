@@ -158,6 +158,68 @@ class _FirestoreIslemleriState extends State<FirestoreIslemleri> {
     });
   }
     
+      void _veriSil() {
+    // Belge (kişi) silme
+    _firestore.doc("users/S3KloVRitbTFeU1DFVvI").delete().then((value) {
+      print("S3KloVRitbTFeU1DFVvI  kişisi silindi");
+    }).catchError((Object error) {
+      print("Kişi silinirken hata oluştu $error");
+    });
+
+
+    // Belli kişiye ait alan silme
+    _firestore.doc("users/barış_ak")
+        .update({'cismi': FieldValue.delete()})
+        .then((value) => print("Kişiye ait alan silindi"))
+        .catchError((onError) {
+      print("Kişiye ait alan silinirken hata oluştu : " + onError.toString());
+    });
+  }
+
+  Future _veriOku() async {
+    // Kişiye ait tüm verileri çekip üzerinde işlemler yapabiliriz
+    DocumentSnapshot documentSnapshot = await _firestore.doc(
+        "users/ferhat_iltas").get();
+    print("Kişi idsi : " + documentSnapshot.id);
+    print("Kişi ismi : " + documentSnapshot.data()['ad']);
+    print(
+        "Kişi öğrenci mi : " + documentSnapshot.data()['ogrenciMi'].toString());
+    print("Kişi parası : " + documentSnapshot.data()['para'].toString());
+    print("Kişi yaşı : " + documentSnapshot.data()['yas'].toString());
+    print("Kişi kayıt zamanı : " + documentSnapshot.data()['zaman'].toString());
+    print("documentSnapshot.data().toString() : " +
+        documentSnapshot.data().toString());
+    print("documentSnapshot.toString() : " + documentSnapshot.toString());
+    documentSnapshot.data().forEach((key,
+        value) { // forech ile tüm key value leri çek
+      print("Key : $key - Value : $value");
+    });
+
+
+    // Bir kolleksiyondaki eleman sayısı
+    _firestore.collection("users").get().then((querySnapshots) {
+      print("users kolleksiyonundaki eleman sayısı : " +
+          querySnapshots.docs.length.toString());
+
+      // Tüm kişilerin tüm verilerini getir
+      for (int i = 0; i < querySnapshots.docs.length; i++) {
+        print("$i . kişinin bilgileri : " +
+            querySnapshots.docs[i].data().toString());
+      }
+
+      // Değiştirilen verilerin anlık olarak gözükmesi
+      var ref = _firestore.collection("users").doc("ferhat_iltas");
+      ref.snapshots().listen((anlikDegisenVeri) {
+        print("Anlık değişen veri : " + anlikDegisenVeri.data().toString());
+      });
+
+      // Kişi sayısını anlık olarak göster
+      _firestore.collection("users").snapshots().listen((anlikKisiSayisi) {
+        print("Anlık kişi sayısı : " + anlikKisiSayisi.docs.length.toString());
+      });
+    });
+  }
+    
     
     
     
