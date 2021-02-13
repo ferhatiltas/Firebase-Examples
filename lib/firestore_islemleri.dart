@@ -220,7 +220,53 @@ class _FirestoreIslemleriState extends State<FirestoreIslemleri> {
     });
   }
     
-    
+      void _veriSorgula() async {
+    // İsimi Bilimeyen olanları getir
+    var dokumanlar=await _firestore.collection("users").where("isim",isEqualTo: 'Bilinmeyen').get();
+    for(var dokuman in dokumanlar.docs){
+      print("İsmi Bilinmeyen yazanlar : "+dokuman.data().toString());
+    }
+
+    // Limitli kullanıcı getir (kaç kişi istersen o kadar veri getirecek) faturalandırmadan dolayı yap.,
+    var limitliGEtir=await _firestore.collection("users").limit(2).get();
+    for(var limitli in limitliGEtir.docs){
+      print("Limitli getirilenler : "+limitli.data().toString());
+    }
+  }
+
+  void _galeriResimUpload() async {
+
+    var _picker = ImagePicker();
+    var resim = await _picker.getImage(source: ImageSource.gallery); // galeriden seçilen resmin ekranda gözükmesiniz sağlar
+    setState(() {
+      _secilenResim = File(resim.path); // galeriden seçilen resmin ekranda gözükmesiniz sağlar
+    });
+
+
+    Reference ref = FirebaseStorage.instance
+        .ref()
+        .child("user")
+        .child("emre")
+        .child("profil.png");
+    UploadTask  uploadTask = ref.putFile(File(_secilenResim.path)); // resmi veritabanında üstteki yola at
+    var url = await (await uploadTask).ref.getDownloadURL(); // yüklendikten sonra url olutur
+    debugPrint("upload edilen resmin urlsi : " + url);
+  }
+  void _kameraResimUpload() async {
+    final picker = ImagePicker();
+    var resim = await picker.getImage(source: ImageSource.camera);
+    setState(() {
+      _secilenResim = File(resim.path);
+    });
+    Reference ref = FirebaseStorage.instance
+        .ref()
+        .child("user")
+        .child("hasan")
+        .child("profil.png");
+    UploadTask  uploadTask = ref.putFile(File(_secilenResim.path));
+    var url = await (await uploadTask).ref.getDownloadURL();
+    debugPrint("upload edilen resmin urlsi : " + url);
+  }
     
     
   }
