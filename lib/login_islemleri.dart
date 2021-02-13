@@ -150,6 +150,54 @@ class _LoginIslemleriState extends State<LoginIslemleri> {
     }
   }
   
+    void _cikisYap() async {
+    if (_auth.currentUser == null) {
+      await _auth.signOut();
+    } else {
+      print("*****************Oturum açan kullanıcı yok veya çıkış oldu");
+    }
+  }
+
+  void _resetPassword() async {
+    String _email = "iltasferhatt@gmail.com";
+
+    try {
+      await _auth.sendPasswordResetEmail(email: _email);
+      print("************** Şifre resetlemek için size email gönderdik");
+    } catch (e) {
+      print("************** Şifre resetlenirken hata çıktı :  " + e.toString());
+    }
+  }
+
+  void _updatePassword() async {
+    try {
+      await _auth.currentUser.updatePassword("newPassword");
+      print("************** Şifreniz güncellendi  : ");
+    } catch (e) {
+      try {
+        String email = 'iltasferhatt@gmail.com';
+        String password = 'newPassword!';
+
+        EmailAuthCredential credential =
+            EmailAuthProvider.credential(email: email, password: password);
+
+        await FirebaseAuth.instance.currentUser
+            .reauthenticateWithCredential(credential);
+        print(
+            "************** Girilen eski bilgiler doğru çıktı ------------------  : ");
+
+        await _auth.currentUser.updatePassword("newPassword");
+        print("************** Şifreniz güncellendi ------------------  : ");
+      } catch (ee) {
+        print("Şifre güncellenirken hata çıktı ----------- " + ee.toString());
+      }
+
+      print("************** Şifre güncellenirken hata çıktı " + e.toString());
+    }
+  }
+  
+  
+  
   
   
   
