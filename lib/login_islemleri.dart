@@ -79,6 +79,78 @@ class _LoginIslemleriState extends State<LoginIslemleri> {
       ),
     );
   }
+  Future<UserCredential> _signInWithGoogle() async {
+    try {
+      // Trigger the authentication flow
+      final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
 
+      // Obtain the auth details from the request
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      // Create a new credential
+      final GoogleAuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      // Once signed in, return the UserCredential
+      return await FirebaseAuth.instance.signInWithCredential(credential);
+    } catch (e) {
+      print("***********Google ile girişte hata çıktı : " + e.toString());
+    }
+  }
+
+  void _emailSifreKullaniciOlustur() async {
+    String _email = "iltasferhatt@gmail.com";
+    String _password = "newPassword";
+
+    try {
+      UserCredential _credential = await _auth.createUserWithEmailAndPassword(
+          email: _email, password: _password);
+      User _newUser = _credential.user;
+      await _newUser.sendEmailVerification();
+
+      if (_auth.currentUser != null) {
+        print(
+            "*****************Size gönderdiğimiz maile tıklayıp hesabınızı onaylayınız...");
+        await _auth.signOut();
+        print("*****************Kullanıcıyı sistemden attık");
+      }
+
+      print(_newUser.toString());
+    } catch (e) {
+      print(
+          " ------------------------- HATA ---------------------------------");
+      print(e.toString());
+    }
+  }
+
+  void _emailSifreGirisYap() async {
+    String _email = "iltasferhatt@gmail.com";
+    String _password = "newPassword";
+
+    try {
+      if (_auth.currentUser == null) {
+        User _oturumAcanUser = (await _auth.signInWithEmailAndPassword(
+                email: _email, password: _password))
+            .user;
+
+        if (_oturumAcanUser.emailVerified) {
+          print("*****************Mail onaylandı ana sayfaya gidiniz.");
+        } else {
+          print("*****************Mailinizi onaylayınız");
+          _auth.signOut();
+        }
+      } else {
+        print("*****************Zaten giriş yapmış bir kullanıcı var");
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+  
+  
+  
   
 }
