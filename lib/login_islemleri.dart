@@ -198,6 +198,82 @@ class _LoginIslemleriState extends State<LoginIslemleri> {
   
   
   
+    void _updateEmail() async {
+    try {
+      await _auth.currentUser.updateEmail("iltasferhatt@gmail.com");
+      print("************** Email güncellendi  : ");
+    } on FirebaseAuthException catch (e) {
+      try {
+        String email = 'iltasferhat@gmail.com';
+        String password = 'newPassword!';
+
+        EmailAuthCredential credential =
+            EmailAuthProvider.credential(email: email, password: password);
+
+        await FirebaseAuth.instance.currentUser
+            .reauthenticateWithCredential(credential);
+        print(
+            "************** Girilen eski bilgiler doğru çıktı ------------------  : ");
+
+        await _auth.currentUser.updateEmail("iltasferhatt@gmail.com");
+        print("************** Email güncellendi ------------------  : ");
+      } catch (ee) {
+        print("Email güncellenirken hata çıktı ----------- " + ee.toString());
+      }
+
+      print("************** Email güncellenirken hata çıktı " + e.toString());
+    }
+  }
+
+  void _telNoGiris() async {
+    try{
+      await _auth.verifyPhoneNumber(
+        phoneNumber: '+90 569 459 69 56',
+        //197800
+        verificationCompleted: (PhoneAuthCredential credential) async {
+
+          try{
+            await _auth.signInWithCredential(credential);
+            print("*****************Çalıştı ");
+
+          }catch(e){
+            print("*****************Hata TEL "+e.toString());
+          }
+        },
+        verificationFailed: (FirebaseAuthException e) {
+          print("*************verificationFailed Hatası : " + e.toString());
+        },
+        codeSent: (String verificationId, int resendToken) async {
+          print("************Kod gönderildi doğrula : ");
+
+          try{
+            String smsCode = '197800';
+
+            // Create a PhoneAuthCredential with the code
+            PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.credential(
+                verificationId: verificationId, smsCode: smsCode);
+
+            // Sign the user in (or link) with the credential
+            await _auth.signInWithCredential(phoneAuthCredential);
+            print("*****************Çalıştı ");
+
+          }catch(e){
+            print("*****************Hata TEL "+e.toString());
+          }
+
+
+        },
+        codeAutoRetrievalTimeout: (String verificationId) {
+          print("************Time Out a düştü : ");
+        },
+
+      );
+      print("**************** TEL ÇALIŞTI   ");
+    }catch(e){
+      print("**************** TEL HATASI GİRİŞ :  "+e.toString());
+    }
+  }
+  
   
   
   
