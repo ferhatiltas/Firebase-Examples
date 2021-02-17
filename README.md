@@ -39,7 +39,7 @@ Before starting :checkered_flag:, you need to have [Git](https://git-scm.com) an
 $ git clone https://github.com/ferhatiltas/Firebase-Examples.git
 
 # Access
-$ cd Notes-App
+$ cd Firebase-Examples
 
 # Pull dependencies
 $ flutter pub get
